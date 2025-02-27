@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import FilterButtons from "./FilterButtons";
+import FilterButtons from "../Components/FilterButtons";
 import { useAuth } from "../context/AuthProvider";
 import Video from "./Video";
 // import VideoCard from "./VideoCard";
