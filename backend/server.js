@@ -1,11 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import userRoutes from "./routes/userRoutes.js"
-import videoRoutes from "./routes/videoRoutes.js"
-import commentRoutes from "./routes/commentRoutes.js"
-import authRoutes from "./routes/auth.js"
+import auth from "./routes/auth.js"
+import users from "./routes/users.js"
+import videos from "./routes/videos.js"
+import comments from "./routes/comments.js"
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 const app = express();
 dotenv.config();
@@ -18,12 +19,18 @@ const connect = () => {
     });
 }
 
-app.use(cookieParser())
+app.use(cors({
+    origin: "http://localhost:5173", // Allow frontend requests
+    credentials: true,
+}));
+
+
 app.use(express.json());
-app.use("/api/auth", authRoutes);
-app.use("/api/userRoutes", userRoutes);
-app.use("/api/videoRoutes", videoRoutes);
-app.use("/api/commentRoutes", commentRoutes);
+app.use(cookieParser())
+app.use("/api/auth", auth);
+app.use("/api/users", users);
+app.use("/api/videos", videos);
+app.use("/api/comments", comments);
 
 
 app.use((err, req, res, next) => {
@@ -36,7 +43,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-const PORT = 7070;
+const PORT = process.env.PORT || 7070;
 
 app.listen(PORT, () =>{
     connect()

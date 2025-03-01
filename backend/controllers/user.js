@@ -77,13 +77,17 @@ export const like = async (req, res, next) => {
    const id = req.user.id;
    const videoId = req.params.videoId;
    try {
-      await Video.findByIdAndUpdate(videoId,{
-         $addToSet: { likes:id },
-         $pull: { dislikes: id }
-      })
-      res.status(200).json("The video has been liked.")
+      const updatedVideo = await Video.findByIdAndUpdate(
+         videoId,
+         {
+            $addToSet: { likes: id },
+            $pull: { dislikes: id },
+         },
+         { new: true } // Return the updated document
+      );
+      res.status(200).json(updatedVideo); // Return updated video data
    } catch (err) {
-      next(err)
+      next(err);
    }
 };
 
@@ -91,12 +95,16 @@ export const dislike = async (req, res, next) => {
    const id = req.user.id;
    const videoId = req.params.videoId;
    try {
-      await Video.findByIdAndUpdate(videoId,{
-         $addToSet: { dislikes:id },
-         $pull: { likes: id }
-      })
-      res.status(200).json("The video has been disliked.")
+      const updatedVideo = await Video.findByIdAndUpdate(
+         videoId,
+         {
+            $addToSet: { dislikes: id },
+            $pull: { likes: id },
+         },
+         { new: true } // Return the updated document
+      );
+      res.status(200).json(updatedVideo); // Return updated video data
    } catch (err) {
-      next(err)
+      next(err);
    }
 };

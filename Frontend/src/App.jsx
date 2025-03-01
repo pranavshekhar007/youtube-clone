@@ -2,6 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import Sidebar from "./Components/Sidebar";
+import { Provider } from "react-redux";
+import { persistor, store } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
+import axios from "axios";
+
+
+// ✅ Enable cookies in all axios requests
+axios.defaults.withCredentials = true;
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -24,17 +32,15 @@ const App = () => {
   };
 
   return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
     <div className="flex">
-      {/* Navbar - Always Fixed at the Top */}
       <Navbar toggleSidebar={toggleSidebar} />
 
       <div className="flex flex-1">
-        {/* Sidebar - Only Shows When Opened */}
         {isSidebarOpen && (
           <Sidebar isOpen={isSidebarOpen} isLargeScreen={isLargeScreen} />
         )}
-
-        {/* Main Content (Switches Between Home, Search, Channel) */}
 
         <div
           className={`flex-1 transition-all duration-300 ${
@@ -47,6 +53,8 @@ const App = () => {
         </div>
       </div>
     </div>
+    </PersistGate>
+    </Provider>
   );
 };
 

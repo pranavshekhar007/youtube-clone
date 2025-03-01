@@ -1,60 +1,82 @@
-import { lazy, Suspense } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Error from './Components/Error.jsx'; 
-import AuthProvider from './context/AuthProvider.jsx'
+import { lazy, Suspense } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+import App from "./App";
+import Error from "./components/Error.jsx";
 
-const Home = lazy(() => import("./Components/Home.jsx"));
-const Search = lazy(() => import("./Components/Search.jsx"));
-const Channel = lazy(() => import("./Components/Channel.jsx"));
-const PlayingVideo = lazy(() => import("./Components/PlayingVideo.jsx"));
+const Home = lazy(() => import("./pages/Home.jsx"));
+const Video = lazy(() => import("./pages/Video.jsx"));
+const SignIn = lazy(() => import("./pages/SignIn.jsx"));
+const Search = lazy(() => import("./pages/Search.jsx"));
+const Channel = lazy(() => import("./components/Channel.jsx"));
 
-const appRouter = createBrowserRouter (
-  [
-    {
-      path: "/",
-      element: <App />,
-      errorElement: <Error />,
-      children: [
-        {
-          path: "/",
-          element:
+const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    errorElement: <Error />,
+    children: [
+      {
+        index: true,
+        element: (
           <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
-            <Home />
+            <Home type="random" />
           </Suspense>
-        },
-        {
-          path: "/search/:searchQuery",
-          element:
-          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}> 
+        ),
+      },
+      {
+        path: "trends",
+        element: (
+          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
+            <Home type="trend" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "subscriptions",
+        element: (
+          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
+            <Home type="sub" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "search/:searchQuery",
+        element: (
+          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
             <Search />
           </Suspense>
-        },
-        {
-          path: "/video/:id",
-          element:
-          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}> 
-              <PlayingVideo />
-          </Suspense>
-        },
-        {
-          path: "channel",
-          element:
-          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}> 
+        ),
+      },
+      {
+        path: "channel",
+        element: (
+          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
             <Channel />
           </Suspense>
-        },
-      ]
-    },
-  ]
-)
+        ),
+      },
+      {
+        path: "signin",
+        element: (
+          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
+            <SignIn />
+          </Suspense>
+        ),
+      },
+      {
+        path: "video/:id",
+        element: (
+          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
+            <Video />
+          </Suspense>
+        ),
+      },
+    ],
+  },
+]);
 
-createRoot(document.getElementById('root')).render(
-  <AuthProvider>
-    <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
-        <RouterProvider router={appRouter} />
-    </Suspense>
-  </AuthProvider>,
-)
+createRoot(document.getElementById("root")).render(
+  <RouterProvider router={appRouter} />
+);

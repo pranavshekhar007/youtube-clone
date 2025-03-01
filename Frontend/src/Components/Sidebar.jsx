@@ -36,13 +36,14 @@ import {
   MdHelp,
   MdFeedback,
 } from "react-icons/md";
+import { Link } from "react-router-dom";
 
-const Sidebar = ({ isOpen, isLargeScreen}) => {
+const Sidebar = ({ isOpen, isLargeScreen }) => {
   const sidebarItems = [
     {
       id: 1,
       name: "Home",
-      icon: <GoHome />,
+      icon: <Link to="/"> <GoHome /> </Link> ,
     },
     {
       id: 2,
@@ -52,7 +53,7 @@ const Sidebar = ({ isOpen, isLargeScreen}) => {
     {
       id: 3,
       name: "Subscription",
-      icon: <MdOutlineSubscriptions />,
+      icon: <Link to="subscriptions"><MdOutlineSubscriptions /></Link> ,
     },
   ];
 
@@ -93,7 +94,7 @@ const Sidebar = ({ isOpen, isLargeScreen}) => {
     {
       id: 1,
       name: "Trending",
-      icon: <AiOutlineFire />,
+      icon: <Link to="trends"><AiOutlineFire /></Link> ,
     },
     {
       id: 2,
@@ -189,59 +190,68 @@ const Sidebar = ({ isOpen, isLargeScreen}) => {
   ];
 
   return (
-    <div className={`h-screen w-64 bg-white overflow-y-auto 
+    <div
+      className={`h-screen w-64 bg-white overflow-y-auto 
         fixed top-16 left-0 transition-transform duration-300
         ${isOpen ? "translate-x-0" : "-translate-x-64"}
         ${isLargeScreen ? "lg:translate-x-0 lg:block" : "fixed z-50"}`}
-
-  >
-    <div className="mt-10">
-      {/* Home  */}
-      <div className=" space-y-3 items-center">
-        {sidebarItems.map((item) => {
-          return (
-            <div key={item.id} className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1">
-              <div className="text-xl cursor-pointer">{item.icon}</div>
-              <span className="cursor-pointer">{item.name}</span>
-            </div>
-          );
-        })}
-      </div>
-      <br />
-      <hr />
-
-      {/* You */}
-      <div className="mt-4 space-y-3 items-center">
-        <div className="flex items-center space-x-4 hover:bg-gray-200 duration-300 rounded-xl p-1 cursor-pointer">
-          <h1>You</h1>
-          <FaChevronRight />
+    >
+      <div className="mt-10">
+        {/* Home  */}
+        <div className=" space-y-3 items-center">
+          {sidebarItems.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1"
+              >
+                <div className="text-xl cursor-pointer">{item.icon}</div>
+                <span className="cursor-pointer">{item.name}</span>
+              </div>
+            );
+          })}
         </div>
-        {sidebarItems2.map((item) => {
-          return (
-            <div key={item.id} className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1">
-              <div className="text-xl cursor-pointer">{item.icon}</div>
-              <span className="cursor-pointer">{item.name}</span>
-            </div>
-          );
-        })}
-      </div>
-      <br />
-      <hr />
+        <br />
+        <hr />
 
-      {/* Explore */}
-      <div className="mt-4 space-y-3 items-center">
-        <div className="flex items-center space-x-4 hover:bg-gray-200 duration-300 rounded-xl p-1 cursor-pointer">
-          <h1 className="font-semibold">Explore</h1>
+        {/* You */}
+        <div className="mt-4 space-y-3 items-center">
+          <div className="flex items-center space-x-4 hover:bg-gray-200 duration-300 rounded-xl p-1 cursor-pointer">
+            <h1>You</h1>
+            <FaChevronRight />
+          </div>
+          {sidebarItems2.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1"
+              >
+                <div className="text-xl cursor-pointer">{item.icon}</div>
+                <span className="cursor-pointer">{item.name}</span>
+              </div>
+            );
+          })}
         </div>
-        {sidebarItems3.map((item) => {
-          return (
-            <div key={item.id} className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1">
-              <div className="text-xl cursor-pointer">{item.icon}</div>
-              <span className="cursor-pointer">{item.name}</span>
-            </div>
-          );
-        })}
-      </div>
+        <br />
+        <hr />
+
+        {/* Explore */}
+        <div className="mt-4 space-y-3 items-center">
+          <div className="flex items-center space-x-4 hover:bg-gray-200 duration-300 rounded-xl p-1 cursor-pointer">
+            <h1 className="font-semibold">Explore</h1>
+          </div>
+          {sidebarItems3.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1"
+              >
+                <div className="text-xl cursor-pointer">{item.icon}</div>
+                <span className="cursor-pointer">{item.name}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <br />
       <hr />
@@ -253,7 +263,10 @@ const Sidebar = ({ isOpen, isLargeScreen}) => {
         </div>
         {sidebarItems4.map((item) => {
           return (
-            <div key={item.id} className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1">
+            <div
+              key={item.id}
+              className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1"
+            >
               <div className="text-xl cursor-pointer text-red-500">
                 {item.icon}
               </div>
@@ -269,7 +282,10 @@ const Sidebar = ({ isOpen, isLargeScreen}) => {
       <div className="mt-4 space-y-3 items-center">
         {sidebarItems5.map((item) => {
           return (
-            <div key={item.id} className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1">
+            <div
+              key={item.id}
+              className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1"
+            >
               <div className="text-xl cursor-pointer">{item.icon}</div>
               <span className="cursor-pointer">{item.name}</span>
             </div>

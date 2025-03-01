@@ -1,53 +1,29 @@
 import React, { useEffect, useState } from "react";
-import FilterButtons from "../Components/FilterButtons";
-import { useAuth } from "../context/AuthProvider";
-import Video from "./Video";
-// import VideoCard from "./VideoCard";
-// import sampleVideos from "../utils/sampleVideos";
+import Card from "../Components/Card";
+import axios from "axios";
 
-const Home = () => {
-    const [selectedCategory, setSelectedCategory] = useState("All");
-    
+const Home = ({ type }) => {
+  const [videos, setVideos] = useState([]);
 
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+      const res = await axios.get("http://localhost:7070/api/videos/" + type);
+      console.log("Full Response:", res); // Log full response
+      console.log("API Response Data:", res.data);
+      setVideos(res.data); // Ensure `res.data` is an array
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
+    };
+    fetchVideos();
+  }, [type]);
 
-  // Filter videos based on selected category
-  // const filteredVideos =
-  //   selectedCategory === "All"
-  //     ? sampleVideos
-  //     : sampleVideos.filter((video) => video.category === selectedCategory);
-
-
-  const { data } = useAuth();
-  console.log(data);
-   
   return (
-    <div className="flex">
-
-        <div className="h-[calc(100vh-6.625rem)] overflow-y-scroll overflow-x-hidden ">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-5">
-          { data.map((item) => {
-              if(item.type !== "video") return false;
-              return <Video key={item.id} video={item?.video} />
-            })}
-        </div>
-        </div>
-
-   
-
-  
-
-      {/* Filter & Videos */}
-      <div>
-        {/* Filter Buttons */}
-        <FilterButtons selectedCategory={selectedCategory} setCategory={setSelectedCategory} />
-
-        <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {/* Videos Buttons */}
-          {/* {filteredVideos.map((video) => (
-             <VideoCard key={video.videoId} video={video} /> 
-           ))}  */}
-        </div>
-      </div>
+    <div className=" mt-16 flex flex-wrap justify-between">
+      {Array.isArray(videos) ? videos.map((video) => (
+        <Card key={video._id} video={video} />
+      )) : <p>Loading videos...</p>}
     </div>
   );
 };
