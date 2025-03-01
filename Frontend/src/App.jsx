@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 
 
 // ✅ Enable cookies in all axios requests
@@ -34,6 +35,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
+      <ToastContainer />
     <div className="flex">
       <Navbar toggleSidebar={toggleSidebar} />
 

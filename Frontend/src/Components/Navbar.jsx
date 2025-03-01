@@ -3,15 +3,18 @@ import { AiOutlineMenu, AiOutlineBell } from "react-icons/ai";
 import { CiSearch } from "react-icons/ci";
 import { IoMdMic } from "react-icons/io";
 import { RiVideoAddLine } from "react-icons/ri";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"; // ✅ Use named import
 import logo from "../assets/logo.png";
+import Upload from "./Upload";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ toggleSidebar }) => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
   const [user, setUser] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
-  console.log("🟡 Navbar received user:", currentUser.img);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -26,6 +29,7 @@ const Navbar = ({ toggleSidebar }) => {
   }, []);
 
   return (
+    <>
     <nav className="flex justify-between fixed top-0 w-full bg-white px-6 py-2 z-50 shadow-md items-center">
       {/* Left Section */}
       <div className="flex items-center space-x-4">
@@ -42,11 +46,12 @@ const Navbar = ({ toggleSidebar }) => {
         <div className="w-full flex border rounded-full overflow-hidden">
           <input
             type="text"
-            placeholder="Search"
             className="w-full px-3 py-2 outline-none text-sm"
+            placeholder="Search"
+            onChange={(e) => setQ(e.target.value)}
           />
           <button className="px-4 py-2 bg-gray-100 border-l">
-            <CiSearch size={24} />
+            <CiSearch size={24} onClick={()=>navigate(`/search?q=${q}`)} />
           </button>
         </div>
         <IoMdMic
@@ -57,10 +62,14 @@ const Navbar = ({ toggleSidebar }) => {
 
       {/* Right Section */}
       <div className="flex space-x-5 items-center">
-        <RiVideoAddLine className="text-2xl cursor-pointer" />
+        <RiVideoAddLine 
+        onClick={() => setOpen(true)}
+        className="text-2xl cursor-pointer" 
+        />
         <AiOutlineBell className="text-2xl cursor-pointer" />
 
         {currentUser ? (
+          <Link to="signin">
           <div className="flex items-center gap-2 font-medium">
             {/* Profile Image */}
             <img
@@ -71,8 +80,9 @@ const Navbar = ({ toggleSidebar }) => {
             />
             <span>{currentUser.name}</span>
           </div>
+          </Link>
         ) : (
-          <Link to="/signin">
+          <Link to="signin">
             <button className="px-4 py-1 bg-blue-600 text-white rounded">
               Sign In
             </button>
@@ -80,6 +90,8 @@ const Navbar = ({ toggleSidebar }) => {
         )}
       </div>
     </nav>
+    {open && <Upload setOpen = {setOpen} /> }
+    </>
   );
 };
 

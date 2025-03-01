@@ -42,7 +42,7 @@ const appRouter = createBrowserRouter([
         ),
       },
       {
-        path: "search/:searchQuery",
+        path: "search",
         element: (
           <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
             <Search />

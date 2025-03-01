@@ -51,11 +51,13 @@ export const deleteVideo = async (req, res, next) => {
 export const getVideo = async (req, res, next) => {
   try {
     const video = await Video.findById(req.params.id);
+    if (!video) return next(createError(404, "Video not found!"));
     res.status(200).json(video);
   } catch (err) {
     next(err);
   }
 };
+
 
 export const addView = async (req, res, next) => {
   try {

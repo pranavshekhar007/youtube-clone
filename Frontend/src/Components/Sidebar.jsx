@@ -43,7 +43,8 @@ const Sidebar = ({ isOpen, isLargeScreen }) => {
     {
       id: 1,
       name: "Home",
-      icon: <Link to="/"> <GoHome /> </Link> ,
+      icon: <GoHome />,
+      path: "/"
     },
     {
       id: 2,
@@ -53,7 +54,8 @@ const Sidebar = ({ isOpen, isLargeScreen }) => {
     {
       id: 3,
       name: "Subscription",
-      icon: <Link to="subscriptions"><MdOutlineSubscriptions /></Link> ,
+      icon: <MdOutlineSubscriptions />,
+      path: "/subscriptions"
     },
   ];
 
@@ -94,7 +96,7 @@ const Sidebar = ({ isOpen, isLargeScreen }) => {
     {
       id: 1,
       name: "Trending",
-      icon: <Link to="trends"><AiOutlineFire /></Link> ,
+      icon: <AiOutlineFire />,
     },
     {
       id: 2,
@@ -192,7 +194,7 @@ const Sidebar = ({ isOpen, isLargeScreen }) => {
   return (
     <div
       className={`h-screen w-64 bg-white overflow-y-auto 
-        fixed top-16 left-0 transition-transform duration-300
+        fixed top-10 left-0 transition-transform duration-300
         ${isOpen ? "translate-x-0" : "-translate-x-64"}
         ${isLargeScreen ? "lg:translate-x-0 lg:block" : "fixed z-50"}`}
     >
@@ -201,13 +203,15 @@ const Sidebar = ({ isOpen, isLargeScreen }) => {
         <div className=" space-y-3 items-center">
           {sidebarItems.map((item) => {
             return (
+              <Link key={item.id} to={item.path}>
               <div
-                key={item.id}
+                
                 className="flex items-center space-x-6 hover:bg-gray-200 duration-300 rounded-xl p-1"
-              >
+                >
                 <div className="text-xl cursor-pointer">{item.icon}</div>
                 <span className="cursor-pointer">{item.name}</span>
               </div>
+                </Link>
             );
           })}
         </div>
