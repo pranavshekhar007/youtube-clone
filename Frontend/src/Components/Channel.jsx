@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 
 const Channel = () => {
   const [channel, setChannel] = useState(null);
-  const [videos, setVideos] = useState([]);
   const [newChannelName, setNewChannelName] = useState("");
   const [newChannelDescription, setNewChannelDescription] = useState("");
   const [editing, setEditing] = useState(false);
@@ -21,29 +20,24 @@ const Channel = () => {
   useEffect(() => {
     if (userId) {
       fetchChannel();
+    } else {
+      setLoading(false);
     }
   }, [userId]);
 
   // ✅ Fetch channel details
   const fetchChannel = async () => {
     try {
-      const res = await axios.get(`http://localhost:7070/api/channels/${userId}`);
+      // Make sure to pass the token if your route is protected
+      const res = await axios.get(`http://localhost:7070/api/channels/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setChannel(res.data);
-      fetchVideos(res.data._id);
     } catch (error) {
       console.error("Error fetching channel:", error);
+      // If channel not found, channel remains null
     } finally {
       setLoading(false);
-    }
-  };
-
-  // ✅ Fetch videos of the channel
-  const fetchVideos = async (channelId) => {
-    try {
-      const res = await axios.get(`http://localhost:7070/api/channels/${channelId}/videos`);
-      setVideos(res.data);
-    } catch (error) {
-      console.error("Error fetching videos:", error);
     }
   };
 
@@ -58,19 +52,23 @@ const Channel = () => {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast.success("create channel successfully! 🎉");
+      toast.success("Channel created successfully! 🎉");
       setChannel(res.data);
     } catch (error) {
-      toast.error("channel already will created in on user only one channel will created!");
+      toast.error("A channel for this user already exists or another error occurred.");
     }
   };
 
   // ✅ Update channel
   const updateChannel = async () => {
+    if (!channel) return;
     try {
       const res = await axios.put(
         `http://localhost:7070/api/channels/${channel._id}`,
-        { name: updatedName, description: updatedDescription },
+        {
+          name: updatedName || channel.name, // fallback to existing name
+          description: updatedDescription || channel.description, // fallback to existing desc
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setChannel(res.data);
@@ -82,38 +80,28 @@ const Channel = () => {
 
   // ✅ Delete channel
   const deleteChannel = async () => {
+    if (!channel) return;
     try {
       await axios.delete(`http://localhost:7070/api/channels/${channel._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setChannel(null);
-      setVideos([]);
-      toast.success("delete channel successfully! 🎉");
+      toast.success("Channel deleted successfully! 🎉");
     } catch (error) {
       console.error("Error deleting channel:", error);
     }
   };
 
-  // ✅ Delete video
-  const deleteVideo = async (videoId) => {
-    try {
-      await axios.delete(`http://localhost:7070/api/videos/${videoId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setVideos(videos.filter((video) => video._id !== videoId));
-    } catch (error) {
-      console.error("Error deleting video:", error);
-    }
-  };
-
-  // if (loading) {
-  //   return <div className="mt-16">Loading...</div>;
-  // }
+  // Optional: You can show a loading spinner until we've determined whether there's a channel
+  if (loading) {
+    return <div className="mt-16">Loading...</div>;
+  }
 
   return (
     <div className="mt-16">
       {channel ? (
         <>
+          {/* Show Channel Info */}
           <h1>{channel.name}</h1>
           <p>{channel.description}</p>
 
@@ -140,23 +128,13 @@ const Channel = () => {
           )}
 
           {/* Delete Channel */}
-          <button onClick={deleteChannel} style={{ color: "red" }}>
+          <button onClick={deleteChannel} style={{ color: "red", marginLeft: "10px" }}>
             Delete Channel
           </button>
-
-          {/* Videos */}
-          <h2>Videos</h2>
-          <div>
-            {videos.map((video) => (
-              <div key={video._id}>
-                <h3>{video.title}</h3>
-                <button onClick={() => deleteVideo(video._id)}>Delete</button>
-              </div>
-            ))}
-          </div>
         </>
       ) : (
         <div>
+          {/* Create Channel */}
           <h2>Create Your Channel</h2>
           <input
             type="text"

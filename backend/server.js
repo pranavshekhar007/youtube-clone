@@ -5,7 +5,7 @@ import auth from "./routes/auth.js"
 import users from "./routes/users.js"
 import videos from "./routes/videos.js"
 import comments from "./routes/comments.js"
-// import channels from "./routes/channels.js";
+import channels from "./routes/channels.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
@@ -41,7 +41,7 @@ app.use("/api/auth", auth);
 app.use("/api/users", users);
 app.use("/api/videos", videos);
 app.use("/api/comments", comments);
-// app.use("/api/channels", channels);
+app.use("/api/channels", channels);
 
 
 app.use((err, req, res, next) => {

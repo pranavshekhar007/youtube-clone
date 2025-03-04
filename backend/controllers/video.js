@@ -130,6 +130,16 @@ export const getVideo = async (req, res, next) => {
 };
 
 
+export const getUserVideos = async (req, res, next) => {
+  try {
+    const videos = await Video.find({ userId: req.params.userId });
+    res.status(200).json(videos);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 export const addView = async (req, res, next) => {
   try {
     await Video.findByIdAndUpdate(req.params.id, {
