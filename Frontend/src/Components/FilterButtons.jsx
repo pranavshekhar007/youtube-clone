@@ -1,6 +1,6 @@
 import React from "react";
 
-const categories = ["All", "React", "JavaScript", "Node.js", "MongoDB", "CSS", "Python", "Django"];
+const categories = ["All", "React", "Song", "JavaScript", "Node.js", "MongoDB", "CSS", "Python", "Django"];
 
 const FilterButtons = ({ selectedCategory, setCategory }) => {
   return (

@@ -11,6 +11,7 @@ const VideoUpload = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null); // ✅ Store decoded user info
 
+  
   // ✅ Decode JWT Token and Set User
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -50,7 +51,7 @@ const VideoUpload = () => {
         },
       });
       alert("Video uploaded successfully");
-      console.log(response.data);
+      console.log("Uploaded video data:",response.data);
     } catch (error) {
       console.error("Upload failed", error);
       alert("Failed to upload video");

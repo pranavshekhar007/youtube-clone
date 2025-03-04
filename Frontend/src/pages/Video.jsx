@@ -31,6 +31,7 @@ const Video = () => {
         );
         setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
+        console.log("Video URL:", `http://localhost:7070/uploads/${videoRes.data.videoUrl}`);
       } catch (err) {
         console.error("Error fetching video/channel:", err);
       }
@@ -88,24 +89,24 @@ const Video = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-6 mt-16">
       {/* Video Content */}
-      <div className="flex-1">
+      <div className="flex-2">
         <div className="relative w-full max-h-[720px] rounded-lg shadow-lg overflow-hidden">
           {currentVideo.videoUrl.includes("youtube.com") ||
           currentVideo.videoUrl.includes("youtu.be") ? (
             <iframe
-              className="w-full h-[400px] md:h-[500px] rounded-lg"
-              src={currentVideo.videoUrl.replace("watch?v=", "embed/")}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          ) : (
-            <video
-              className="w-full max-h-[720px] object-cover rounded-lg shadow-lg"
-              src={currentVideo.videoUrl}
-              controls
-            />
+            className="w-full h-[400px] md:h-[500px] rounded-lg"
+            src={currentVideo.videoUrl.replace("watch?v=", "embed/")}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        ) : (
+          <video
+            className="w-full max-h-[720px] object-cover rounded-lg shadow-lg"
+            src={`http://localhost:7070${currentVideo.videoUrl}`}
+            controls
+          />
           )}
         </div>
 

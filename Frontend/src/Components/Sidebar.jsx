@@ -194,11 +194,11 @@ const Sidebar = ({ isOpen, isLargeScreen }) => {
 
   return (
     <div
-      className={`h-screen w-64 bg-white overflow-y-auto 
-        fixed top-10 left-0 transition-transform duration-300
-        ${isOpen ? "translate-x-0" : "-translate-x-64"}
-        ${isLargeScreen ? "lg:translate-x-0 lg:block" : "fixed z-50"}`}
-    >
+    className={`h-full bg-white overflow-y-auto 
+      fixed top-10 transition-transform duration-300
+      ${isOpen ? "translate-x-0 w-1/4 sm:w-64" : "-translate-x-64"}
+      ${isLargeScreen ? "lg:translate-x-0 lg:block w-64" : "fixed z-50"}`}
+  >
       <div className="mt-10">
         {/* Home  */}
         <div className=" space-y-3 items-center">
