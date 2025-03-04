@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import Error from "./components/Error.jsx";
+import Profile from "./pages/Profile.jsx";
+import VideoUpload from "./Components/VideoUpload.jsx";
 
 const Home = lazy(() => import("./pages/Home.jsx"));
 const Video = lazy(() => import("./pages/Video.jsx"));
@@ -70,6 +72,22 @@ const appRouter = createBrowserRouter([
         element: (
           <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
             <Video />
+          </Suspense>
+        ),
+      },
+      {
+        path: "upload",
+        element:(
+          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
+              <VideoUpload/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "profile",
+        element:(
+          <Suspense fallback={<p className="text-center text-lg">Wait...</p>}>
+            <Profile />
           </Suspense>
         ),
       },

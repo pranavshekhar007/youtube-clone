@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaThumbsUp, FaThumbsDown, FaReply, FaSave } from "react-icons/fa";
-import { FaRegThumbsUp, FaRegThumbsDown  } from "react-icons/fa";
+import { FaRegThumbsUp, FaRegThumbsDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
@@ -16,15 +16,19 @@ const Video = () => {
   const dispatch = useDispatch();
 
   const path = useLocation().pathname.split("/")[2];
-  
+
   const [channel, setChannel] = useState({});
-  console.log(path)
+  console.log(path);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const videoRes = await axios.get(`http://localhost:7070/api/videos/find/${path}`);
-        const channelRes = await axios.get(`http://localhost:7070/api/users/find/${videoRes.data.userId}`);
+        const videoRes = await axios.get(
+          `http://localhost:7070/api/videos/find/${path}`
+        );
+        const channelRes = await axios.get(
+          `http://localhost:7070/api/users/find/${videoRes.data.userId}`
+        );
         setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
       } catch (err) {
@@ -40,14 +44,18 @@ const Video = () => {
         console.log("User not authenticated");
         return;
       }
-  
-      await axios.put(`http://localhost:7070/api/users/like/${currentVideo._id}`);
+
+      await axios.put(
+        `http://localhost:7070/api/users/like/${currentVideo._id}`
+      );
       dispatch(like(currentUser._id));
     } catch (error) {
-      console.error("Error handling like:", error.response?.data || error.message);
+      console.error(
+        "Error handling like:",
+        error.response?.data || error.message
+      );
     }
   };
-  
 
   const handleDislike = async () => {
     try {
@@ -55,14 +63,18 @@ const Video = () => {
         console.log("User not authenticated");
         return;
       }
-  
-      await axios.put(`http://localhost:7070/api/users/dislike/${currentVideo._id}`);
+
+      await axios.put(
+        `http://localhost:7070/api/users/dislike/${currentVideo._id}`
+      );
       dispatch(dislike(currentUser._id));
     } catch (error) {
-      console.error("Error handling dislike:", error.response?.data || error.message);
+      console.error(
+        "Error handling dislike:",
+        error.response?.data || error.message
+      );
     }
   };
-  
 
   const handleSub = async () => {
     if (currentUser.subscribedUsers.includes(channel._id)) {
@@ -77,13 +89,26 @@ const Video = () => {
     <div className="flex flex-col lg:flex-row gap-6 p-6 mt-16">
       {/* Video Content */}
       <div className="flex-1">
-        <div className="relative">
-          <video
-            className="w-full max-h-[720px] object-cover rounded-lg shadow-lg"
-            src={currentVideo.videoUrl}
-            controls
-          />
+        <div className="relative w-full max-h-[720px] rounded-lg shadow-lg overflow-hidden">
+          {currentVideo.videoUrl.includes("youtube.com") ||
+          currentVideo.videoUrl.includes("youtu.be") ? (
+            <iframe
+              className="w-full h-[400px] md:h-[500px] rounded-lg"
+              src={currentVideo.videoUrl.replace("watch?v=", "embed/")}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          ) : (
+            <video
+              className="w-full max-h-[720px] object-cover rounded-lg shadow-lg"
+              src={currentVideo.videoUrl}
+              controls
+            />
+          )}
         </div>
+
         <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mt-5">
           {currentVideo.title}
         </h1>

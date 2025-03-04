@@ -1,37 +1,81 @@
-import Channel from "../models/Channel";
-// Create a new channel
-export const createChannel = async (req, res) => {
-  try {
-    const { name, description } = req.body;
-    const newChannel = new Channel({ name, description, owner: req.user.id });
-    await newChannel.save();
-    res.status(201).json(newChannel);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to create channel" });
-  }
-};
+// import Channel from "../models/Channel.js";
+// import Video from "../models/Video.js";
+// import { createError } from "../error.js";
 
-// Fetch a channel by ID
-export const getChannel = async (req, res) => {
-  try {
-    const channel = await Channel.findById(req.params.channelId).populate("owner", "name");
-    if (!channel) return res.status(404).json({ error: "Channel not found" });
-    res.json(channel);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch channel" });
-  }
-};
+// // ✅ Create a channel
+// export const createChannel = async (req, res, next) => {
+//   try {
+//     // Check if user already has a channel
+//     const existingChannel = await Channel.findOne({ userId: req.user.id });
+//     if (existingChannel) return next(createError(400, "Channel already exists!"));
 
-// Delete a channel (Only the owner can delete)
-export const deleteChannel = async (req, res) => {
-  try {
-    const channel = await Channel.findById(req.params.channelId);
-    if (!channel) return res.status(404).json({ error: "Channel not found" });
-    if (channel.owner.toString() !== req.user.id) return res.status(403).json({ error: "Unauthorized" });
+//     const newChannel = new Channel({
+//       userId: req.user.id,
+//       name: req.body.name,
+//       description: req.body.description,
+//     });
 
-    await channel.deleteOne();
-    res.json({ message: "Channel deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to delete channel" });
-  }
-};
+//     const savedChannel = await newChannel.save();
+//     res.status(200).json(savedChannel);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// // ✅ Get a channel by user ID
+// export const getChannel = async (req, res, next) => {
+//   try {
+//     const channel = await Channel.findOne({ userId: req.params.userId });
+//     if (!channel) return next(createError(404, "Channel not found!"));
+//     res.status(200).json(channel);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// // ✅ Update a channel (Only owner can update)
+// export const updateChannel = async (req, res, next) => {
+//   try {
+//     const channel = await Channel.findById(req.params.id);
+//     if (!channel) return next(createError(404, "Channel not found!"));
+
+//     if (req.user.id !== channel.userId)
+//       return next(createError(403, "You can update only your channel!"));
+
+//     const updatedChannel = await Channel.findByIdAndUpdate(
+//       req.params.id,
+//       { $set: req.body },
+//       { new: true }
+//     );
+
+//     res.status(200).json(updatedChannel);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// // ✅ Delete a channel (Only owner can delete)
+// export const deleteChannel = async (req, res, next) => {
+//   try {
+//     const channel = await Channel.findById(req.params.id);
+//     if (!channel) return next(createError(404, "Channel not found!"));
+
+//     if (req.user.id !== channel.userId)
+//       return next(createError(403, "You can delete only your channel!"));
+
+//     await Channel.findByIdAndDelete(req.params.id);
+//     res.status(200).json("Channel deleted successfully.");
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// // ✅ Get all videos of a specific channel
+// export const getChannelVideos = async (req, res, next) => {
+//   try {
+//     const videos = await Video.find({ userId: req.params.id });
+//     res.status(200).json(videos);
+//   } catch (err) {
+//     next(err);
+//   }
+// };

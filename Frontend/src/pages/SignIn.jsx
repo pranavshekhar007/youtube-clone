@@ -1,12 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { loginFailure, loginStart, loginSuccess, logout } from "../redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
 import { auth, provider } from "../utils/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import Profile from "./Profile"; // Import the new Profile component
 
 const SignIn = () => {
   const [name, setName] = useState("");
@@ -15,9 +15,6 @@ const SignIn = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
-
 
   // Handle Login
   const handleLogin = async (e) => {
@@ -31,7 +28,6 @@ const SignIn = () => {
       );
       dispatch(loginSuccess(res.data));
       toast.success("Logged in successfully! 🎉");
-      console.log("Usser logged in", res.data);
       navigate("/");
     } catch (err) {
       dispatch(loginFailure());
@@ -43,30 +39,23 @@ const SignIn = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:7070/api/auth/signup",
-        {
-          name,
-          email,
-          password,
-        },
+        { name, email, password },
         { withCredentials: true }
       );
       toast.success("Account created successfully! 🎉");
       navigate("/");
-      console.log("User signed up:", res.data);
     } catch (err) {
-      console.error("Signup error:", err);
       toast.error("Sign-up failed! Try again.");
     }
   };
 
-  // handle with google
+  // Google Sign-In
   const signInWithGoogle = async () => {
     dispatch(loginStart());
     signInWithPopup(auth, provider)
       .then((result) => {
-        console.log(result);
         axios
           .post(
             "http://localhost:7070/api/auth/google",
@@ -78,62 +67,20 @@ const SignIn = () => {
             { withCredentials: true }
           )
           .then((res) => {
-            console.log(res);
             dispatch(loginSuccess(res.data));
             toast.success("Logged in successfully! 🎉");
-            navigate("/")
+            navigate("/");
           });
       })
-      .catch((error) => {
+      .catch(() => {
         dispatch(loginFailure());
       });
-  };
-
-  // Handle LogOut
-  const handleLogout = () => {
-    dispatch(logout()); // Clear user data in Redux
-    setShowDropdown(false);
-    toast.success("Logged out successfully! 👋");
-    navigate("/", { replace: true }); // Redirect to SignIn
   };
 
   return (
     <div className="mt-16 flex flex-col items-center justify-center h-[calc(100vh-56px)] text-gray-900 dark:text-gray-100">
       {currentUser ? (
-        <div className="relative flex items-center space-x-3">
-          {/* Profile Section */}
-          <img
-            src={currentUser.img || "/default-avatar.png"}
-            alt="Profile"
-            className="w-12 h-12 rounded-full cursor-pointer border-2 border-gray-300 dark:border-gray-600 hover:shadow-lg"
-            onClick={() => setShowDropdown(!showDropdown)}
-          />
-          <p
-            className="font-semibold cursor-pointer"
-            onClick={() => setShowDropdown(!showDropdown)}
-          >
-            {currentUser.name}
-          </p>
-
-          {/* Dropdown Menu */}
-          {showDropdown && (
-            <div
-              ref={dropdownRef}
-              className="absolute top-14 right-0 bg-white dark:bg-gray-800 shadow-lg border border-gray-300 dark:border-gray-600 rounded-lg p-4 w-60"
-            >
-              <p className="font-bold text-lg">{currentUser.name}</p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {currentUser.email}
-              </p>
-              <button
-                onClick={handleLogout}
-                className="mt-4 w-full bg-red-500 text-white py-2 rounded font-semibold hover:bg-red-600 transition"
-              >
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
+        <Profile currentUser={currentUser} />
       ) : (
         <div className="flex flex-col items-center bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 p-6 rounded-lg w-80">
           <h1 className="text-2xl font-bold">Sign in</h1>
@@ -192,14 +139,6 @@ const SignIn = () => {
           </button>
         </div>
       )}
-      <div className="mt-4 text-xs text-gray-500 dark:text-gray-400 flex flex-col items-center">
-        <span>English (USA)</span>
-        <div className="flex space-x-4 mt-2">
-          <span className="cursor-pointer hover:underline">Help</span>
-          <span className="cursor-pointer hover:underline">Privacy</span>
-          <span className="cursor-pointer hover:underline">Terms</span>
-        </div>
-      </div>
     </div>
   );
 };

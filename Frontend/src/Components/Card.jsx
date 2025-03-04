@@ -5,6 +5,7 @@ import { format } from "timeago.js";
 
 const Card = ({ type, video }) => {
   const [channel, setChannel] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false); 
 
   useEffect(() => {
     const fetchChannel = async () => {
@@ -30,6 +31,7 @@ const Card = ({ type, video }) => {
         className={`${
           type !== "sm" ? "w-[360px] mb-11" : "mb-2 flex gap-2"
         } cursor-pointer`}
+        onClick={() => setIsPlaying(true)} // Click to play video
       >
         <img
           className={`w-full ${type === "sm" ? "h-[120px]" : "h-[202px]"} bg-gray-400 flex-1`}

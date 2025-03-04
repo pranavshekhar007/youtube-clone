@@ -1,13 +1,31 @@
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 
-const channelSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    description: { type: String },
-    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  },
-  { timestamps: true }
-);
+// const ChannelSchema = new mongoose.Schema(
+//   {
+//     userId: {
+//       type: String,
+//       required: true,
+//       unique: true, // Each user can have only one channel
+//     },
+//     name: {
+//       type: String,
+//       required: true,
+//     },
+//     description: {
+//       type: String,
+//     },
+//     subscribers: {
+//       type: Number,
+//       default: 0,
+//     },
+//     videos: [
+//       {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "Video",
+//       },
+//     ],
+//   },
+//   { timestamps: true }
+// );
 
-const Channel = mongoose.model("Channel", channelSchema);
-export default Channel;
+// export default mongoose.model("Channel", ChannelSchema);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Card from "../components/Card";
+import Card from "../Components/Card";
 import axios from "axios";
 
 const Home = ({ type }) => {

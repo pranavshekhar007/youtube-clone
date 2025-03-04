@@ -5,11 +5,13 @@ import auth from "./routes/auth.js"
 import users from "./routes/users.js"
 import videos from "./routes/videos.js"
 import comments from "./routes/comments.js"
+// import channels from "./routes/channels.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-const app = express();
+
 dotenv.config();
+const app = express();
 
 const connect = () => {
     mongoose.connect(process.env.MONGO).then(() => {
@@ -26,11 +28,14 @@ app.use(cors({
 
 
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
+
+
 app.use("/api/auth", auth);
 app.use("/api/users", users);
 app.use("/api/videos", videos);
 app.use("/api/comments", comments);
+// app.use("/api/channels", channels);
 
 
 app.use((err, req, res, next) => {

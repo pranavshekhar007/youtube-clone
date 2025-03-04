@@ -48,8 +48,9 @@ const Sidebar = ({ isOpen, isLargeScreen }) => {
     },
     {
       id: 2,
-      name: "Shorts",
-      icon: <SiYoutubeshorts />,
+      name: "Your Channel",
+      icon: <MdPerson />,
+      path: "/channel"
     },
     {
       id: 3,
@@ -62,8 +63,8 @@ const Sidebar = ({ isOpen, isLargeScreen }) => {
   const sidebarItems2 = [
     {
       id: 1,
-      name: "Your Channel",
-      icon: <MdPerson />,
+      name: "Shorts",
+      icon: <SiYoutubeshorts />,
     },
     {
       id: 2,

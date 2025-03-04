@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineMenu, AiOutlineBell } from "react-icons/ai";
 import { CiSearch } from "react-icons/ci";
 import { IoMdMic } from "react-icons/io";
@@ -6,13 +6,18 @@ import { RiVideoAddLine } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"; // ✅ Use named import
 import logo from "../assets/logo.png";
-import Upload from "./Upload";
-import { useSelector } from "react-redux";
+import { logout } from "../redux/userSlice";
+import { FaCloudUploadAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import VideoUpload from "./VideoUpload";
 
 const Navbar = ({ toggleSidebar }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const [user, setUser] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
 
@@ -27,6 +32,28 @@ const Navbar = ({ toggleSidebar }) => {
       }
     }
   }, []);
+
+
+   // Close dropdown when clicking outside
+   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Handle Logout
+  const handleSignOut = () => {
+    dispatch(logout());
+    setDropdownOpen(false);
+    navigate("/");
+  };
+
 
   return (
     <>
@@ -62,25 +89,48 @@ const Navbar = ({ toggleSidebar }) => {
 
       {/* Right Section */}
       <div className="flex space-x-5 items-center">
-        <RiVideoAddLine 
-        onClick={() => setOpen(true)}
+       <Link to="upload">
+       <RiVideoAddLine 
+        // onClick={() => setOpen(true)}
         className="text-2xl cursor-pointer" 
         />
+       </Link> 
+          <FaCloudUploadAlt />
+        
+        
         <AiOutlineBell className="text-2xl cursor-pointer" />
 
         {currentUser ? (
-          <Link to="signin">
-          <div className="flex items-center gap-2 font-medium">
-            {/* Profile Image */}
+          <div className="relative">
+            {/* Profile Image - Hover to Show Dropdown */}
             <img
-              src={currentUser?.img}
+              src={currentUser?.img || "/default-avatar.png"}
               alt="Profile"
-              className="w-8 h-8 rounded-full object-cover border"
-              referrerPolicy="no-referrer"
+              className="w-8 h-8 rounded-full object-cover border cursor-pointer"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
             />
-            <span>{currentUser.name}</span>
+
+            {/* Dropdown Menu */}
+            {dropdownOpen && (
+              <div
+                ref={dropdownRef}
+                className="absolute right-0 mt-2 w-48 bg-white shadow-md border rounded-lg py-2 z-50"
+              >
+                <button
+                  onClick={() => navigate("/profile")}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  Profile
+                </button>
+                <button
+                  onClick={handleSignOut}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
           </div>
-          </Link>
         ) : (
           <Link to="signin">
             <button className="px-4 py-1 bg-blue-600 text-white rounded">
@@ -90,7 +140,8 @@ const Navbar = ({ toggleSidebar }) => {
         )}
       </div>
     </nav>
-    {open && <Upload setOpen = {setOpen} /> }
+    {open && <VideoUpload setOpen = {setOpen} /> }
+
     </>
   );
 };

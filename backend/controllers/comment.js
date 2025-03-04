@@ -41,9 +41,7 @@ export const deleteComment = async (req, res, next) => {
 
 export const getComments = async (req, res, next) => {
     try {
-        console.log("Fetching comments for videoId:", req.params.videoId); // Debugging log
         const comments = await Comment.find({ videoId: String(req.params.videoId) });
-        console.log("Comments fetched:", comments); // Debugging log
         res.status(200).json(comments);
     } catch (err) {
         next(err);

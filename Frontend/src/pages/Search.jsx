@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Card from "../components/Card";
+import Card from "../Components/Card";
 
 const Search = () => {
   const [videos, setVideos] = useState([]);
