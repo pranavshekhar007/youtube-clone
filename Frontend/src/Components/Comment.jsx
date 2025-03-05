@@ -21,7 +21,6 @@ const Comment = ({ comment, onDelete }) => {
   const handleDelete = async () => {
     try {
       if (!currentUser) {
-        console.log("User not authenticated");
         return;
       }
 

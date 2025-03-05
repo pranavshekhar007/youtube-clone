@@ -1,156 +1,91 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom"; 
+import { useSelector } from "react-redux";
 
 const Channel = () => {
-  const [channel, setChannel] = useState(null);
   const [newChannelName, setNewChannelName] = useState("");
   const [newChannelDescription, setNewChannelDescription] = useState("");
-  const [editing, setEditing] = useState(false);
-  const [updatedName, setUpdatedName] = useState("");
-  const [updatedDescription, setUpdatedDescription] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [channelCreated, setChannelCreated] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
+
+  const navigate = useNavigate(); // ✅ Initialize useNavigate
 
   // Get user and token from localStorage
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
-  const userId = user?._id;
-
-  // Fetch channel details on mount
-  useEffect(() => {
-    if (userId) {
-      fetchChannel();
-    } else {
-      setLoading(false);
-    }
-  }, [userId]);
-
-  // ✅ Fetch channel details
-  const fetchChannel = async () => {
-    try {
-      // Make sure to pass the token if your route is protected
-      const res = await axios.get(`http://localhost:7070/api/channels/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setChannel(res.data);
-    } catch (error) {
-      console.error("Error fetching channel:", error);
-      // If channel not found, channel remains null
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // ✅ Create a new channel
   const createChannel = async () => {
     try {
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:7070/api/channels",
-        {
-          name: newChannelName,
-          description: newChannelDescription,
-        },
+        { name: newChannelName, description: newChannelDescription },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success("Channel created successfully! 🎉");
-      setChannel(res.data);
+      setChannelCreated(true); // Hide form after creation
+      setTimeout(() => {
+        navigate("/profile"); 
+      }, 1500);
     } catch (error) {
       toast.error("A channel for this user already exists or another error occurred.");
     }
   };
 
-  // ✅ Update channel
-  const updateChannel = async () => {
-    if (!channel) return;
-    try {
-      const res = await axios.put(
-        `http://localhost:7070/api/channels/${channel._id}`,
-        {
-          name: updatedName || channel.name, // fallback to existing name
-          description: updatedDescription || channel.description, // fallback to existing desc
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setChannel(res.data);
-      setEditing(false);
-    } catch (error) {
-      console.error("Error updating channel:", error);
-    }
-  };
+  if (!currentUser) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-xl font-semibold">User not found. Please sign in.</p>
+      </div>
+    );
+  }
 
-  // ✅ Delete channel
-  const deleteChannel = async () => {
-    if (!channel) return;
-    try {
-      await axios.delete(`http://localhost:7070/api/channels/${channel._id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setChannel(null);
-      toast.success("Channel deleted successfully! 🎉");
-    } catch (error) {
-      console.error("Error deleting channel:", error);
-    }
-  };
-
-  // Optional: You can show a loading spinner until we've determined whether there's a channel
-  if (loading) {
-    return <div className="mt-16">Loading...</div>;
+  // If channel is created, show a message
+  if (channelCreated) {
+    return (
+      <div className="mt-16 text-center text-lg font-semibold">
+        Channel created successfully! 🎉
+      </div>
+    );
   }
 
   return (
-    <div className="mt-16">
-      {channel ? (
-        <>
-          {/* Show Channel Info */}
-          <h1>{channel.name}</h1>
-          <p>{channel.description}</p>
-
-          {/* Edit Channel */}
-          {editing ? (
-            <div>
-              <input
-                type="text"
-                placeholder="New Channel Name"
-                value={updatedName}
-                onChange={(e) => setUpdatedName(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="New Description"
-                value={updatedDescription}
-                onChange={(e) => setUpdatedDescription(e.target.value)}
-              />
-              <button onClick={updateChannel}>Save</button>
-              <button onClick={() => setEditing(false)}>Cancel</button>
-            </div>
-          ) : (
-            <button onClick={() => setEditing(true)}>Edit Channel</button>
-          )}
-
-          {/* Delete Channel */}
-          <button onClick={deleteChannel} style={{ color: "red", marginLeft: "10px" }}>
-            Delete Channel
-          </button>
-        </>
-      ) : (
-        <div>
-          {/* Create Channel */}
-          <h2>Create Your Channel</h2>
+    <div className=" min-h-screen flex items-center justify-center">
+      <div className="flex flex-col items-center w-full max-w-sm mx-auto bg-white shadow-md rounded-md p-6 space-y-6">
+        <h2 className="text-xl font-semibold">Create Your Channel</h2>
+        <div className="w-full">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Channel Name
+          </label>
           <input
             type="text"
-            placeholder="Channel Name"
+            className="block w-full border border-gray-300 rounded-md p-2 text-sm"
+            placeholder="Enter channel name"
             value={newChannelName}
             onChange={(e) => setNewChannelName(e.target.value)}
           />
+        </div>
+        <div className="w-full">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Handle
+          </label>
           <input
             type="text"
-            placeholder="Channel Description"
+            className="block w-full border border-gray-300 rounded-md p-2 text-sm"
+            placeholder="Enter channel description"
             value={newChannelDescription}
             onChange={(e) => setNewChannelDescription(e.target.value)}
           />
-          <button onClick={createChannel}>Create Channel</button>
         </div>
-      )}
+        <button
+          onClick={createChannel}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition-colors"
+        >
+          Create Channel
+        </button>
+      </div>
     </div>
   );
 };

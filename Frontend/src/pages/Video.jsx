@@ -18,7 +18,6 @@ const Video = () => {
   const path = useLocation().pathname.split("/")[2];
 
   const [channel, setChannel] = useState({});
-  console.log(path);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +30,7 @@ const Video = () => {
         );
         setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
-        console.log("Video URL:", `http://localhost:7070/uploads/${videoRes.data.videoUrl}`);
+        ("Video URL:", `http://localhost:7070/uploads/${videoRes.data.videoUrl}`);
       } catch (err) {
         console.error("Error fetching video/channel:", err);
       }
@@ -42,7 +41,6 @@ const Video = () => {
   const handleLike = async () => {
     try {
       if (!currentUser) {
-        console.log("User not authenticated");
         return;
       }
 
@@ -61,7 +59,6 @@ const Video = () => {
   const handleDislike = async () => {
     try {
       if (!currentUser) {
-        console.log("User not authenticated");
         return;
       }
 

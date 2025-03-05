@@ -14,7 +14,6 @@ export const userSlice = createSlice({
       state.loading = true;
     },
     loginSuccess: (state, action) => {
-      console.log("🔄 Redux Updated! New User:", action.payload);
       state.loading = false;
       state.currentUser = action.payload;
     },

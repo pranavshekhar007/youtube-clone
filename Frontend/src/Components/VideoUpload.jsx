@@ -38,7 +38,7 @@ const VideoUpload = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      toast.success("create channel successfully! 🎉");
+      toast.success("Upload Video successfully! 🎉");
     } catch (error) {
       alert("Failed to upload video");
     }
