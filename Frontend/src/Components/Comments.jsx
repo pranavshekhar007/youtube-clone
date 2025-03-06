@@ -8,6 +8,7 @@ const Comments = ({ videoId }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
+  // Fetch comments when component mounts or videoId changes
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -20,10 +21,11 @@ const Comments = ({ videoId }) => {
     fetchComments();
   }, [videoId]);
 
+  // Handle adding a new comment
   const handleAddComment = async () => {
     try {
-      if (!newComment.trim()) return;
-      const token = currentUser.token;
+      if (!newComment.trim()) return; // Prevent empty comments
+      const token = currentUser.token; // Get authentication token
 
       const res = await axios.post(
         "http://localhost:7070/api/comments/",
@@ -35,22 +37,23 @@ const Comments = ({ videoId }) => {
       );
 
       setComments((prev) => [res.data, ...prev]); // Add new comment at the top
-      setNewComment(""); // Clear input
+      setNewComment(""); // Clear input field after submission
     } catch (err) {
       console.error("Error adding comment:", err);
     }
   };
 
+  // Handle deleting a comment
   const handleDeleteComment = (id) => {
     setComments((prev) => prev.filter((comment) => comment._id !== id));
   };
 
   return (
     <div className="w-full">
-      {/* Comment Input */}
+      {/* Input field for adding a new comment */}
       <div className="flex items-center gap-3 mb-4">
         <img
-          src={currentUser?.img || "/default-avatar.png"}
+          src={currentUser?.img || "/default-avatar.png"} // User avatar
           alt="Avatar"
           className="w-12 h-12 rounded-full object-cover"
         />
@@ -69,7 +72,7 @@ const Comments = ({ videoId }) => {
         </button>
       </div>
 
-      {/* Display Comments */}
+      {/* Display list of comments */}
       {comments.length > 0 ? (
         comments.map((comment) => (
           <Comment key={comment._id} comment={comment} onDelete={handleDeleteComment} />

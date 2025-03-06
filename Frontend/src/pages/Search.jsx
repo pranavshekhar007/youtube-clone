@@ -26,7 +26,7 @@ const Search = () => {
   return (
     <div className="flex flex-wrap gap-2 p-2 mt-16">
       {!currentUser ? (
-        <p className="text-gray-600 dark:text-gray-400 w-full text-center mt-16">
+        <p className="text-gray-600 dark:text-gray-400 w-full text-center mt-8">
           Please sign in to search for videos.
         </p>
       ) : videos.length > 0 ? (

@@ -4,14 +4,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import Error from "./components/Error.jsx";
-import Profile from "./pages/Profile.jsx";
-import VideoUpload from "./Components/VideoUpload.jsx";
 
 const Home = lazy(() => import("./pages/Home.jsx"));
+const Profile = lazy(() => import("./pages/Profile.jsx"));
 const Video = lazy(() => import("./pages/Video.jsx"));
 const SignIn = lazy(() => import("./pages/SignIn.jsx"));
 const Search = lazy(() => import("./pages/Search.jsx"));
-const Channel = lazy(() => import("./components/Channel.jsx"));
+const Channel = lazy(() => import("./Components/Channel.jsx"));
+const VideoUpload = lazy(() => import("./Components/VideoUpload.jsx"));
 
 const appRouter = createBrowserRouter([
   {

@@ -6,7 +6,7 @@ import { auth, provider } from "../utils/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Profile from "./Profile"; // Import the new Profile component
+import Profile from "./Profile"; 
 
 const SignIn = () => {
   const [name, setName] = useState("");
