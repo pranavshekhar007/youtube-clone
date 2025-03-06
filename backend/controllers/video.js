@@ -27,6 +27,32 @@ export const addVideo = async (req, res) => {
 };
 
 
+export const addVideos = async (req, res) => {
+  try {
+    const { title, desc, tags, videoUrl, imgUrl } = req.body;
+
+    if (!title || !desc || !videoUrl || !imgUrl) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+
+    const newVideo = new Video({
+      userId: req.user.id,
+      title,
+      desc,
+      tags: Array.isArray(tags) ? tags : tags.split(","),  
+      videoUrl,  // Direct URL instead of file upload
+      imgUrl,
+    });
+
+    await newVideo.save();
+    res.status(201).json({ message: "Video uploaded successfully", video: newVideo });
+  } catch (error) {
+    console.error("Error uploading video:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
 
 export const upDateVideo = async (req, res, next) => {
   try {
