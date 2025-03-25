@@ -54,7 +54,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-const PORT = process.env.PORT || 7070;
+const PORT = 7070;
 
 app.listen(PORT, () =>{
     connect()
